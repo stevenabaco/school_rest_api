@@ -4,7 +4,7 @@
 
 ## PROJECT OVERVIEW
 
-This REST API is the back-end  This API provides a way to manage a school database containing information about users and courses. 
+This REST API is the back-end of my Teamtree TechDegree capstone project. It provides a way to manage a school database containing information about users and courses. 
 
 Users should be able to interact with the database to:
 
