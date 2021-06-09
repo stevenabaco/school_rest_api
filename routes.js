@@ -13,7 +13,7 @@ const e = require('express');
 // Construct a router instance
 const router = express.Router();
 
-// GET - AUTHORIZED User - RETURN status 200
+// GET - AUTHORIZE User - RETURN status 200
 router.get(
 	'/users',
 	authenticateUser,
@@ -87,7 +87,7 @@ router.post(
 	})
 );
 
-// POST - AUTHORIZE - CREATE new COURSE
+// POST - AUTHENTICATE - CREATE new COURSE
 router.post(
 	'/courses',
 	authenticateUser, // Authenticate User
