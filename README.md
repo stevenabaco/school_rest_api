@@ -17,7 +17,7 @@ For security reasons, the app utilizes user Authorization to restrict access to 
 
 
 
-## EXTRA FEATURES & CUSTOM MODS FOR EXCEEDS EXPECTATIONS
+## EXTRA FEATURES & CUSTOM MODS
 
 <ul>
   <li>Add validation to User email to ensure new email accounts are unique and properly formatted</li>
