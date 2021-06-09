@@ -23,6 +23,14 @@ module.exports = (sequalize) => {
     description: {
       type: DataTypes.TEXT,
       allowNull: false,
+      validation: {
+        notEmpty: {
+          msg: " A description is required."
+        },
+        notNull: {
+          msg: "Please provide a descrition."
+        }
+      }
     },
     estimatedTime: {
       type: DataTypes.STRING,
