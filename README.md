@@ -12,10 +12,10 @@ Users should be able to interact with the database to:
 <li>Create new courses</li>
 <li>Retrieve information on existing courses</li>
 <li>Update or Delete existing courses</li>
-
+</ul>
 For security reasons, the app utilizes user Authorization to restrict access to information based on users being authorized prior to being able to access the information. 
 
-</ul>
+
 
 ## EXTRA FEATURES AND CUSTOMIZATION FOR EXCEEDS EXPECTATIONS
 
