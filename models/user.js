@@ -1,25 +1,79 @@
 'use strict';
-const { Model } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      User.hasMany(models.Course);
+const { DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
+
+module.exports = sequelize => {
+	const User = sequelize.define('User', {
+		// Model attributes
+		firstName: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				notEmpty: {
+					msg: ' A first name is required. ',
+				},
+				notNull: {
+					msg: ' Please enter a first name for your account. ',
+				},
+			},
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: ' A last name is required. ',
+        },
+        notNull: {
+          msg: ' Please enter a last name for your account. '
+        }
+      }
+    },
+    emailAddress: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        msg: ' The email you entered has already been registered.'
+      },
+      validate: {
+        isEmail: {
+          msg: "Please enter a valid email for your account.",
+        },
+        notEmpty: {
+          msg: "A valid email is required."
+        },
+        notNull: {
+          msg: "Please enter a valid email for your account."
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "A password is required."
+        },
+        notNull: {
+          msg: "Please provide a password for your account."
+        }
+      },
+      set(value) {
+        if (value !== "") {
+          this.setDataValue('password', bcrypt.hashSync(value, 10));
+        }
+      }
     }
-  };
-  User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    emailAddress: DataTypes.STRING,
-    password: DataTypes.STRING
   }, {
-    sequelize,
-    modelName: 'User',
+    sequelize
   });
+  User.associate = (models) => {
+    User.hasMany(models.Course, {
+      foreignKey: {
+        fieldName: 'userId',
+        allowNull: false,
+      }
+    })
+  }
   return User;
 };
