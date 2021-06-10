@@ -21,7 +21,8 @@ router.get(
 		const user = req.currentUser;
 		res.json({
 			// Display just name and email of user. Filter out other columns.
-			name: `${user.firstName} ${user.lastName}`, // Concatenate first and last name
+			firstName: user.firstName,
+			lastName: user.lastName, // Concatenate first and last name
 			username: user.emailAddress,
 		});
 	})
@@ -54,7 +55,21 @@ router.get(
 router.get(
 	'/courses/:id',
 	asyncHandler(async (req, res) => {
-		const course = await Course.findByPk(req.params.id);
+		const course = await Course.findByPk(req.params.id, {
+			attributes: [
+				'id',
+				'title',
+				'description',
+				'estimatedTime',
+				'materialsNeeded',
+			],
+			include: [
+				{
+					model: User,
+					attributes: ['firstName', 'lastName', 'emailAddress'],
+				},
+			],
+		});
 		res.json(course);
 	})
 );
@@ -67,11 +82,7 @@ router.post(
 	asyncHandler(async (req, res) => {
 		try {
 			await User.create(req.body);
-			res
-				.status(201)
-				.location('/')
-				.json({ message: 'Account successfully created!' })
-				.end();
+			res.status(201).location('/').end();
 			res.redirect('/');
 		} catch (error) {
 			if (
@@ -91,7 +102,7 @@ router.post(
 router.post(
 	'/courses',
 	authenticateUser, // Authenticate User
-	asyncHandler(async (req, res) => {
+	asyncHandler(async (req, res, next) => {
 		try {
 			const user = req.currentUser;
 			// Create new course assigned to Authorized User
@@ -117,8 +128,8 @@ router.post(
 router.put(
 	'/courses/:id',
 	authenticateUser,
-	asyncHandler(async (req, res) => {
-		try {
+	asyncHandler(async (req, res, next) => {
+		try { // Update and return 204 status
 			const user = req.currentUser;
 			const course = await Course.findByPk(req.params.id);
 
@@ -137,7 +148,7 @@ router.put(
 				error.name === 'SequelizeValidationError' ||
 				error.name === 'SequelizeUniqueConstraintError'
 			) {
-				const errors = error.errors.map(err.message);
+				const errors = error.errors.map(error => error.message);
 				res.status(400).json({ errors });
 			} else {
 				throw error;
