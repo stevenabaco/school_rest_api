@@ -129,7 +129,8 @@ router.put(
 	'/courses/:id',
 	authenticateUser,
 	asyncHandler(async (req, res, next) => {
-		try { // Update and return 204 status
+		try {
+			// Update and return 204 status
 			const user = req.currentUser;
 			const course = await Course.findByPk(req.params.id);
 
@@ -166,13 +167,13 @@ router.delete(
 			const user = req.currentUser;
 			const course = await Course.findByPk(req.params.id);
 
-			if (course.userId === user.id) {
+			if (course === null) {
+				const error = new Error('Could not find course to delete.');
+				error.status = 404;
+				throw error;
+			} else if (course.userId === user.id) {
 				await course.destroy();
 				res.status(204).end();
-			} else if (course === null) {
-				const error = new Error('Could not find course to delete.');
-				error.status(404);
-				throw error;
 			} else {
 				res.status(403).end();
 			}
